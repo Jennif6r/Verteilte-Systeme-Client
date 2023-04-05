@@ -4,13 +4,20 @@ import java.util.ArrayList;
 
 public class Order {
 	
-	private ArrayList<String> order;
 	
-	public Order(ArrayList<String> pices) {
-		this.order = pices;
+	private ArrayList<Product> order;
+	
+	public Order() {
+		
 	}
 	
-	public ArrayList<String> getOrder() {
+	public void addProduct(ArrayList<Product> pices) {
+		for(Product product: pices) {
+			order.add(product);
+		}
+	}
+
+	public ArrayList<Product> getOrder() {
 		return this.order;
 	}
 

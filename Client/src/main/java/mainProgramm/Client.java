@@ -1,5 +1,11 @@
 package mainProgramm;
 
+
+import java.util.List;
+
+import models.Order;
+import models.OrderList;
+import services.impl.AddOrderItemClient;
 import services.impl.RegistratorClient;
 import services.impl.RequestAktivOrderClient;
 import services.impl.StartOrderClient;
@@ -11,13 +17,16 @@ public class Client {
 		Client client = new Client();
 		try {
 			client.id = RegistratorClient.register();
-System.out.println(client.id);
+			System.out.println(client.id);
 			// request for aktiv order
 			RequestAktivOrderClient request = new RequestAktivOrderClient();
 			client.startOrder();
-			if(request.checkForAktivOrder()) {
-				System.out.println("aktiv Order");
+			List<OrderList> activOrders = request.checkForAktivOrder();
+			int length = activOrders.size();
+			if( length > 0 ) {
+				System.out.println(activOrders.toString());
 			}
+			client.addOrderItem();
 //			while (!request.checkForAktivOrder()) {
 //				// wait and do nothing
 //			}
@@ -37,6 +46,15 @@ System.out.println(client.id);
 		}
 		
 		System.out.println("id: "+ orderId);
+	}
+	
+	public void addOrderItem() {
+		AddOrderItemClient add = new AddOrderItemClient();
+		try {
+			add.addOrderItem(new OrderList(), new Order());
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

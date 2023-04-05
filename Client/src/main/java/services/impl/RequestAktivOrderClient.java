@@ -1,14 +1,16 @@
 package services.impl;
 
 import java.net.URL;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import jakarta.xml.ws.Service;
+import models.OrderList;
 import services.RequestAktivOrder;
 
 public class RequestAktivOrderClient {
-	public boolean checkForAktivOrder() throws Exception{
+	public List<OrderList> checkForAktivOrder() throws Exception{
 		URL serviceUrl = new URL("http://localhost:9000/checkForOrder?wsdl");
 		
 		QName serviceQName = new QName("http://impl.services.java.main/", "RequestAktivOrderImplService");
