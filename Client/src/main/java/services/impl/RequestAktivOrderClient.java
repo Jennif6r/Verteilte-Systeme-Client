@@ -5,7 +5,6 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import jakarta.xml.ws.Service;
-import services.Registrator;
 import services.RequestAktivOrder;
 
 public class RequestAktivOrderClient {
