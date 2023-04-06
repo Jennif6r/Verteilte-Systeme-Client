@@ -10,6 +10,7 @@ import models.OrderList;
 import models.Product;
 import services.impl.AddOrderItemClient;
 import services.impl.JsonParser;
+import services.impl.MergeOrderClient;
 import services.impl.RegistratorClient;
 import services.impl.RequestAktivOrderClient;
 import services.impl.StartOrderClient;
@@ -35,6 +36,7 @@ public class Client {
 //				// wait and do nothing
 //			}
 			// here code to show frame to order
+			client.getMergedOrder();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -67,7 +69,18 @@ public class Client {
 	private ArrayList<Product> getProducts() {
 		ArrayList<Product> products = new ArrayList<Product>();
 		products.add(new Product("Magertia", 7.99, 2));
+		products.add(new Product("Salami", 9.55, 3));
 		return products;
+	}
+	
+	private void getMergedOrder() {
+		MergeOrderClient merge = new MergeOrderClient();
+		try {
+			String result = merge.getMergedOrder("1680778200745");
+			System.out.println(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

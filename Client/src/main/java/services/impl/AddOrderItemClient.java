@@ -5,8 +5,6 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import jakarta.xml.ws.Service;
-import models.Order;
-import models.OrderList;
 import services.AddOrderItem;
 
 public class AddOrderItemClient {

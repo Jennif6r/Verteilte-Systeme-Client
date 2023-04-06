@@ -1,7 +1,6 @@
 package services.impl;
 
 import java.net.URL;
-import java.util.List;
 
 import javax.xml.namespace.QName;
 
