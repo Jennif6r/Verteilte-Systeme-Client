@@ -1,11 +1,15 @@
 package mainProgramm;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import models.Order;
 import models.OrderList;
+import models.Product;
 import services.impl.AddOrderItemClient;
+import services.impl.JsonParser;
 import services.impl.RegistratorClient;
 import services.impl.RequestAktivOrderClient;
 import services.impl.StartOrderClient;
@@ -16,16 +20,16 @@ public class Client {
 	public static void main(String[] args) {
 		Client client = new Client();
 		try {
-			client.id = RegistratorClient.register();
-			System.out.println(client.id);
-			// request for aktiv order
-			RequestAktivOrderClient request = new RequestAktivOrderClient();
-			client.startOrder();
-			List<OrderList> activOrders = request.checkForAktivOrder();
-			int length = activOrders.size();
-			if( length > 0 ) {
-				System.out.println(activOrders.toString());
-			}
+//			client.id = RegistratorClient.register();
+//			System.out.println(client.id);
+//			// request for aktiv order
+//			RequestAktivOrderClient request = new RequestAktivOrderClient();
+//			client.startOrder();
+//			List<OrderList> activOrders = new ArrayList<OrderList>(Arrays.asList(request.checkForAktivOrder()));
+//			int length = activOrders.size();
+//			if( length > 0 ) {
+//				System.out.println(activOrders.toString());
+//			}
 			client.addOrderItem();
 //			while (!request.checkForAktivOrder()) {
 //				// wait and do nothing
@@ -50,11 +54,20 @@ public class Client {
 	
 	public void addOrderItem() {
 		AddOrderItemClient add = new AddOrderItemClient();
+		ArrayList<Product> products = getProducts();
 		try {
-			add.addOrderItem(new OrderList(), new Order());
+			Order order = new Order();
+			order.addProduct(products);
+			add.addOrderItem("1680778200745", JsonParser.parseOrder(order));
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private ArrayList<Product> getProducts() {
+		ArrayList<Product> products = new ArrayList<Product>();
+		products.add(new Product("Magertia", 7.99, 2));
+		return products;
 	}
 
 }

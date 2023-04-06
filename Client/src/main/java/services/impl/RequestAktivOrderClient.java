@@ -10,7 +10,7 @@ import models.OrderList;
 import services.RequestAktivOrder;
 
 public class RequestAktivOrderClient {
-	public List<OrderList> checkForAktivOrder() throws Exception{
+	public OrderList[] checkForAktivOrder() throws Exception{
 		URL serviceUrl = new URL("http://localhost:9000/checkForOrder?wsdl");
 		
 		QName serviceQName = new QName("http://impl.services.java.main/", "RequestAktivOrderImplService");

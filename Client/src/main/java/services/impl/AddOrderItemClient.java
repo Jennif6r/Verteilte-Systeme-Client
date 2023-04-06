@@ -11,9 +11,7 @@ import services.AddOrderItem;
 
 public class AddOrderItemClient {
 
-	public void addOrderItem(OrderList orderList, Order order) throws Exception {
-		System.out.println(order);
-		System.out.println(orderList);
+	public void addOrderItem(String orderId, String order) throws Exception {
 			URL serviceUrl = new URL("http://localhost:9000/addOrderItem?wsdl");
 			
 			QName serviceQName = new QName("http://impl.services.java.main/", "AddOrderItemImplService");
@@ -21,7 +19,7 @@ public class AddOrderItemClient {
 			
 			QName addQName = new QName("http://impl.services.java.main/", "AddOrderItemImplPort");
 			AddOrderItem add = service.getPort(addQName, AddOrderItem.class);
-			add.addOrderItem(orderList, order);
+			add.addOrderItem(orderId, order);
 	}
 
 }

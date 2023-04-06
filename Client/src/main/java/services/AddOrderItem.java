@@ -10,6 +10,6 @@ import models.OrderList;
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 public interface AddOrderItem {
 	@WebMethod
-	void addOrderItem(OrderList orderList, Order order);
+	void addOrderItem(String id, String order);
 
 }
