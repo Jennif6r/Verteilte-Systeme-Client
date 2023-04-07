@@ -5,20 +5,21 @@ import java.util.ArrayList;
 public class Order {
 	
 	
-	private ArrayList<Product> order;
+	private ArrayList<Product> products=new ArrayList<Product>();;
 	
 	public Order() {
+//		this.products = 
 		
 	}
 	
 	public void addProduct(ArrayList<Product> pices) {
 		for(Product product: pices) {
-			order.add(product);
+			products.add(product);
 		}
 	}
 
 	public ArrayList<Product> getOrder() {
-		return this.order;
+		return this.products;
 	}
 
 }
