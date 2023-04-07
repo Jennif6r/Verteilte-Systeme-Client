@@ -9,6 +9,7 @@ import models.Order;
 import models.OrderList;
 import models.Product;
 import services.impl.AddOrderItemClient;
+import services.impl.GetNumberOfOrderClient;
 import services.impl.JsonParser;
 import services.impl.MergeOrderClient;
 import services.impl.RegistratorClient;
@@ -32,6 +33,7 @@ public class Client {
 //				System.out.println(activOrders.toString());
 //			}
 			client.addOrderItem();
+			client.getNumberOfOrders();
 //			while (!request.checkForAktivOrder()) {
 //				// wait and do nothing
 //			}
@@ -81,6 +83,17 @@ public class Client {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void getNumberOfOrders() {
+		GetNumberOfOrderClient getNumber = new GetNumberOfOrderClient();
+		try {
+			int number = getNumber.getNumberOfOrdersFromOrderList("1680778200745");
+			System.out.println("number of orders : " + number);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }
