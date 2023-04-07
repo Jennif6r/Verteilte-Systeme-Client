@@ -25,20 +25,20 @@ public class Client {
 //			client.id = RegistratorClient.register();
 //			System.out.println(client.id);
 //			// request for aktiv order
-//			RequestAktivOrderClient request = new RequestAktivOrderClient();
+			RequestAktivOrderClient request = new RequestAktivOrderClient();
 //			client.startOrder();
-//			List<OrderList> activOrders = new ArrayList<OrderList>(Arrays.asList(request.checkForAktivOrder()));
-//			int length = activOrders.size();
-//			if( length > 0 ) {
-//				System.out.println(activOrders.toString());
-//			}
-			client.addOrderItem();
-			client.getNumberOfOrders();
+			List<OrderList> activOrders = new ArrayList<OrderList>(Arrays.asList(request.checkForAktivOrder()));
+			int length = activOrders.size();
+			if( length > 0 ) {
+				System.out.println(activOrders.toString());
+			}
+//			client.addOrderItem();
+//			client.getNumberOfOrders();
 //			while (!request.checkForAktivOrder()) {
 //				// wait and do nothing
 //			}
 			// here code to show frame to order
-			client.getMergedOrder();
+//			client.getMergedOrder();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
