@@ -27,7 +27,7 @@ public class Client {
 //			// request for aktiv order
 			RequestAktivOrderClient request = new RequestAktivOrderClient();
 //			client.startOrder();
-			List<OrderList> activOrders = new ArrayList<OrderList>(Arrays.asList(request.checkForAktivOrder()));
+			List<String> activOrders = new ArrayList<String>(Arrays.asList(request.checkForAktivOrder()));
 			int length = activOrders.size();
 			if( length > 0 ) {
 				System.out.println(activOrders.toString());

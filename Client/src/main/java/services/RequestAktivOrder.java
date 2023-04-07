@@ -10,5 +10,5 @@ import models.OrderList;
 public interface RequestAktivOrder {
 	
 	@WebMethod
-	OrderList[] isThereAnAktivOrder();
+	String[] isThereAnAktivOrder();
 }
