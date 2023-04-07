@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import models.Order;
-import models.OrderList;
 import models.Product;
 import services.impl.AddOrderItemClient;
 import services.impl.GetNumberOfOrderClient;
@@ -22,29 +21,24 @@ public class Client {
 	public static void main(String[] args) {
 		Client client = new Client();
 		try {
-//			client.id = RegistratorClient.register();
-//			System.out.println(client.id);
-//			// request for aktiv order
+			client.id = RegistratorClient.register();
+			System.out.println(client.id);
 			RequestAktivOrderClient request = new RequestAktivOrderClient();
-//			client.startOrder();
+			String orderId = client.startOrder();
 			List<String> activOrders = new ArrayList<String>(Arrays.asList(request.checkForAktivOrder()));
 			int length = activOrders.size();
 			if( length > 0 ) {
 				System.out.println(activOrders.toString());
 			}
-//			client.addOrderItem();
-//			client.getNumberOfOrders();
-//			while (!request.checkForAktivOrder()) {
-//				// wait and do nothing
-//			}
-			// here code to show frame to order
-//			client.getMergedOrder();
+			client.addOrderItem(orderId);
+			client.getNumberOfOrders(orderId);
+			client.getMergedOrder(orderId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void startOrder() {
+	private String startOrder() {
 		StartOrderClient start = new StartOrderClient();
 		String orderId = "";
 		try {
@@ -54,15 +48,16 @@ public class Client {
 		}
 		
 		System.out.println("id: "+ orderId);
+		return orderId;
 	}
 	
-	public void addOrderItem() {
+	public void addOrderItem(String orderId) {
 		AddOrderItemClient add = new AddOrderItemClient();
 		ArrayList<Product> products = getProducts();
 		try {
 			Order order = new Order();
 			order.addProduct(products);
-			add.addOrderItem("1680778200745", JsonParser.parseOrder(order));
+			add.addOrderItem(orderId, JsonParser.parseOrder(order));
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -75,20 +70,20 @@ public class Client {
 		return products;
 	}
 	
-	private void getMergedOrder() {
+	private void getMergedOrder(String orderId) {
 		MergeOrderClient merge = new MergeOrderClient();
 		try {
-			String result = merge.getMergedOrder("1680778200745");
+			String result = merge.getMergedOrder(orderId);
 			System.out.println(result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void getNumberOfOrders() {
+	private void getNumberOfOrders(String orderId) {
 		GetNumberOfOrderClient getNumber = new GetNumberOfOrderClient();
 		try {
-			int number = getNumber.getNumberOfOrdersFromOrderList("1680778200745");
+			int number = getNumber.getNumberOfOrdersFromOrderList(orderId);
 			System.out.println("number of orders : " + number);
 		} catch (Exception e) {
 			e.printStackTrace();
