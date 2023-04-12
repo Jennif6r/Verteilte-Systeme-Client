@@ -60,6 +60,8 @@ public class OrderGUI {
         panel.add(btn3);
         frame.add(panel);
         frame.pack();
+        frame.setSize(400,400);
+
     }
 
     private void openPizzaSelectionWindow(String username, boolean isGroupOrder) {
@@ -75,6 +77,8 @@ public class OrderGUI {
         JRadioButton rbtn5 = new JRadioButton("Diavolo Salami");
         JRadioButton rbtn6 = new JRadioButton("Special");
         ButtonGroup group = new ButtonGroup();
+        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, 10, 1); // Min: 1, Max: 10, Schritt: 1
+        JSpinner spinner = new JSpinner(spinnerModel);
         group.add(rbtn1);
         group.add(rbtn2);
         group.add(rbtn3);
@@ -87,6 +91,7 @@ public class OrderGUI {
         panel.add(rbtn4);
         panel.add(rbtn5);
         panel.add(rbtn6);
+        panel.add(spinner);
         JButton btn = new JButton("Bestellen");
         btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -120,6 +125,8 @@ public class OrderGUI {
         panel.add(btn);
         frame.add(panel);
         frame.pack();
+        frame.setSize(400,400);
+
     }
 
     public static void main(String[] args) {
@@ -129,6 +136,5 @@ public class OrderGUI {
             }
         });
     	System.out.println("Hallo");
-//    	new OrderGUI();
     }
 }
