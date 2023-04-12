@@ -3,7 +3,9 @@ package mainProgramm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import gui.OrderGUI;
 import models.Order;
@@ -52,11 +54,11 @@ public class Client {
 //		}
 	}
 	
-	public String startOrder() {
+	public String startOrder(String user) {
 		StartOrderClient start = new StartOrderClient();
 		String orderId = "";
 		try {
-			orderId = start.startOrder();
+			orderId = start.startOrder(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -107,11 +109,14 @@ public class Client {
 		this.id = RegistratorClient.register(); 
 	}
 	
-	public List<String> getActiveOrders() throws Exception {
+	public Map<String, String> getActiveOrders() throws Exception {
 		RequestAktivOrderClient request = new RequestAktivOrderClient();
-		List<String> activOrders = new ArrayList<String>(Arrays.asList(request.checkForAktivOrder()));
-		
-		return activOrders;
+		String [][] activOrders = request.checkForAktivOrder();
+		Map<String, String> orderIds = new HashMap<String, String>();
+		for (int i=0; i<activOrders.length; i++) {
+			orderIds.put(activOrders[i][0], activOrders[i][1]);
+		}
+		return orderIds;
 	}
 
 }

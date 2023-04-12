@@ -12,6 +12,7 @@ import java.awt.event.*;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OrderGUI {
@@ -57,7 +58,7 @@ public class OrderGUI {
         JButton btn3 = new JButton("Aktive Sammelbestellung beenden");
         btn1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                openPizzaSelectionWindow(username, client.startOrder());
+                openPizzaSelectionWindow(username, client.startOrder(username));
             	btn3.setEnabled(true);
             }
         });
@@ -66,8 +67,8 @@ public class OrderGUI {
             public void actionPerformed(ActionEvent e) {
             	// aktive Bestellungen rausfinden
             	try {
-					client.getActiveOrders();
-					showActiveOrders(Map.of("jenny","1","rouven","2", "baer", "3"));
+//					client.getActiveOrders();
+					showActiveOrders(client.getActiveOrders());
 //	                openPizzaSelectionWindow(username, false, null);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -93,7 +94,7 @@ public class OrderGUI {
 
     }
     
-    private void showActiveOrders(Map<String, String> activeOrders) {
+	private void showActiveOrders(Map<String, String> activeOrders) {
     	//neues fenster menü mit klappmenü
     	//ins menü: die keys (username), über
         frame.getContentPane().removeAll();

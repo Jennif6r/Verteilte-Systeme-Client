@@ -8,6 +8,6 @@ import jakarta.jws.soap.SOAPBinding;
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 public interface StartOrder {
 	@WebMethod
-	String startOrder();
+	String startOrder(String user);
 
 }
