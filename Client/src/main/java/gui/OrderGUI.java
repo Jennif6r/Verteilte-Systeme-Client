@@ -1,8 +1,18 @@
 package gui;
 
 import javax.swing.*;
+import javax.swing.text.NumberFormatter;
+
+import mainProgramm.Client;
+import models.Order;
+import models.Product;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OrderGUI {
     private JFrame frame;
@@ -10,8 +20,10 @@ public class OrderGUI {
     private JLabel label;
     private JTextField textField;
     private JButton button;
+    private Client client;
 
-    public OrderGUI() {
+    public OrderGUI(Client client) {
+    	this.client = client;
         frame = new JFrame("Pizza Bestellung");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel = new JPanel(new BorderLayout());
@@ -21,6 +33,11 @@ public class OrderGUI {
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String username = textField.getText();
+                try {
+					client.register();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
                 openOptionsWindow(username);
             }
         });
@@ -37,21 +54,33 @@ public class OrderGUI {
         frame.repaint();
         panel = new JPanel(new GridLayout(3, 1));
         JButton btn1 = new JButton("Sammelbestellung anfangen");
+        JButton btn3 = new JButton("Aktive Sammelbestellung beenden");
         btn1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                openPizzaSelectionWindow(username, true);
+                openPizzaSelectionWindow(username, client.startOrder());
+            	btn3.setEnabled(true);
             }
         });
         JButton btn2 = new JButton("Eigene Bestellung");
         btn2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                openPizzaSelectionWindow(username, false);
+            	// aktive Bestellungen rausfinden
+            	try {
+					client.getActiveOrders();
+					showActiveOrders(Map.of("jenny","1","rouven","2", "baer", "3"));
+//	                openPizzaSelectionWindow(username, false, null);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             }
         });
-        JButton btn3 = new JButton("Aktive Sammelbestellung beenden");
+//        btn3.setEnabled(false);
         btn3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Implementieren Sie hier die Logik zum Beenden der aktiven Sammelbestellung
+//            	System.out.println(client.getMergedOrder(client.orderId));
+            	System.out.println(client.getMergedOrder("1681335971089"));
+
                 JOptionPane.showMessageDialog(frame, "Die aktive Sammelbestellung wurde beendet.");
             }
         });
@@ -60,75 +89,197 @@ public class OrderGUI {
         panel.add(btn3);
         frame.add(panel);
         frame.pack();
-    }
+        frame.setSize(400,400);
 
-    private void openPizzaSelectionWindow(String username, boolean isGroupOrder) {
+    }
+    
+    private void showActiveOrders(Map<String, String> activeOrders) {
+    	//neues fenster menü mit klappmenü
+    	//ins menü: die keys (username), über
         frame.getContentPane().removeAll();
         frame.repaint();
-        panel = new JPanel(new GridLayout(6, 1));
-        JLabel lbl1 = new JLabel("Wählen Sie eine Pizza aus:");
-        panel.add(lbl1);
-        JRadioButton rbtn1 = new JRadioButton("Salami");
-        JRadioButton rbtn2 = new JRadioButton("Schinken");
-        JRadioButton rbtn3 = new JRadioButton("Salami + Schinken");
-        JRadioButton rbtn4 = new JRadioButton("Margherita");
-        JRadioButton rbtn5 = new JRadioButton("Diavolo Salami");
-        JRadioButton rbtn6 = new JRadioButton("Special");
-        ButtonGroup group = new ButtonGroup();
-        group.add(rbtn1);
-        group.add(rbtn2);
-        group.add(rbtn3);
-        group.add(rbtn4);
-        group.add(rbtn5);
-        group.add(rbtn6);
-        panel.add(rbtn1);
-        panel.add(rbtn2);
-        panel.add(rbtn3);
-        panel.add(rbtn4);
-        panel.add(rbtn5);
-        panel.add(rbtn6);
-        JButton btn = new JButton("Bestellen");
-        btn.addActionListener(new ActionListener() {
+        Panel panel = new Panel();
+//    	String[] options = (String[]) activeOrders.keySet().toArray();
+        String[] options = {"Option 1", "Option 2", "Option 3", "Option 4"};
+        JComboBox<String> comboBox = new JComboBox<>(options);
+        comboBox.setSelectedIndex(0); // Optional: Setzen der ausgewählten Option
+        panel.add(comboBox);
+        // Hinzufügen des JComboBox zu JFrame
+       
+        
+        // Einstellen der Größe des JFrame und Anzeigen
+        frame.setSize(300, 150);
+        
+        
+
+        JButton btn1 = new JButton("Absenden");
+        btn1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String pizza = "";
-                if (rbtn1.isSelected()) {
-                    pizza = "Salami";
-                } else if (rbtn2.isSelected()) {
-                    pizza = "Schinken";
-                } else if (rbtn3.isSelected())
-                {
-                    pizza = "Salami + Schinken";
-                } else if (rbtn4.isSelected()) {
-                    pizza = "Margherita";
-                } else if (rbtn5.isSelected()) {
-                    pizza = "Diavolo Salami";
-                } else if (rbtn6.isSelected()) {
-                    pizza = "Special";
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Bitte wählen Sie eine Pizza aus.");
-                    return;
-                }
-                if (isGroupOrder) {
-                    // Implementieren Sie hier die Logik für die Gruppenbestellung
-                    JOptionPane.showMessageDialog(frame, "Die Pizza " + pizza + " wurde zur Sammelbestellung hinzugefügt.");
-                } else {
-                    // Implementieren Sie hier die Logik für die individuelle Bestellung
-                    JOptionPane.showMessageDialog(frame, "Die Pizza " + pizza + " wurde für " + username + " bestellt.");
-                }
+            	String username = (String)comboBox.getSelectedItem();
+            	openPizzaSelectionWindow(username, activeOrders.get(username));
+            	
+            	
             }
         });
-        panel.add(btn);
+        
+        panel.add(btn1);
         frame.add(panel);
-        frame.pack();
+        frame.setVisible(true);
+
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new OrderGUI();
-            }
-        });
-    	System.out.println("Hallo");
-//    	new OrderGUI();
+    private void openPizzaSelectionWindow(String username, String orderId) {
+    	String[] pizzen = new String[]{"Salami","Schinken","jenny","rouven","Hallo","Mager"};
+    	panel = new JPanel(new GridLayout(1,3));
+    	frame.getContentPane().removeAll();
+        frame.repaint();
+        JPanel pizzaPanel = new JPanel(new GridLayout(pizzen.length+1, 1));
+        for(int i = 0; i < pizzen.length; i++) {
+        	pizzaPanel.add(new JLabel(pizzen[i]));
+        }
+        panel.add(pizzaPanel);
+        
+        
+        JPanel pricePanel = new JPanel(new GridLayout(pizzen.length+1, 1));
+        for(int i = 0; i < 6; i++) {
+        	pricePanel.add(new JLabel(""+i));
+        }
+        JFormattedTextField[] formattedTFields = new JFormattedTextField[pizzen.length];
+        JButton btnPizzaSend = new JButton("Bestellen");
+        btnPizzaSend.addActionListener(new ActionListener() {
+        
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Order order = new Order();
+				ArrayList<Product> productList = new ArrayList<>();
+				for(int i = 0; i < pizzen.length; i++) {
+					String ftf = formattedTFields[i].getText();
+					System.out.println(ftf);
+					
+					if(!ftf.equals("")) {
+						int number = Integer.parseInt(ftf);
+						if(number > 0) {
+							productList.add(new Product(pizzen[i], 5.5, number));
+						}
+						
+					}
+					
+					
+					System.out.println(formattedTFields[i].getValue());
+				}
+				order.addProduct(productList);
+				client.addOrderItem(order, orderId);
+				
+			}
+		});
+        pricePanel.add(btnPizzaSend);
+        panel.add(pricePanel);
+        
+        
+        JPanel mengePanel = new JPanel(new GridLayout(pizzen.length+1, 1));
+        NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
+        formatter.setValueClass(Integer.class);
+        formatter.setMinimum(0);
+        formatter.setMaximum(Integer.MAX_VALUE);
+        formatter.setAllowsInvalid(false);
+        // If you want the value to be committed on each keystroke instead of focus lost
+        
+        formatter.setCommitsOnValidEdit(true);
+//        JFormattedTextField[] formattedTFields = new JFormattedTextField[pizzen.length];
+        for(int i = 0; i < pizzen.length; i++) {
+        	JFormattedTextField formattedField = new JFormattedTextField(formatter);
+        	formattedTFields[i] = formattedField;
+        	mengePanel.add(formattedField);
+        }
+        
+        panel.add(mengePanel);
+        
+        
+        
+        frame.add(panel);
+        
+        frame.setVisible(true);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+//        JLabel lbl1 = new JLabel("Wählen Sie eine Pizza aus:");
+//        panel.add(lbl1);
+//        JRadioButton rbtn1 = new JRadioButton("Salami");
+//        JRadioButton rbtn2 = new JRadioButton("Schinken");
+//        JRadioButton rbtn3 = new JRadioButton("Salami + Schinken");
+//        JRadioButton rbtn4 = new JRadioButton("Margherita");
+//        JRadioButton rbtn5 = new JRadioButton("Diavolo Salami");
+//        JRadioButton rbtn6 = new JRadioButton("Special");
+//        ButtonGroup group = new ButtonGroup();
+////        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1, 1, 10, 1); // Min: 1, Max: 10, Schritt: 1
+////        JSpinner spinner = new JSpinner(spinnerModel);
+//        group.add(rbtn1);
+//        group.add(rbtn2);
+//        group.add(rbtn3);
+//        group.add(rbtn4);
+//        group.add(rbtn5);
+//        group.add(rbtn6);
+//        panel.add(rbtn1);
+//        panel.add(rbtn2);
+//        panel.add(rbtn3);
+//        panel.add(rbtn4);
+//        panel.add(rbtn5);
+//        panel.add(rbtn6);
+////        panel.add(spinner);
+//        JButton btn = new JButton("Bestellen");
+//        btn.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                String pizza = "";
+//                if (rbtn1.isSelected()) {
+//                    pizza = "Salami";
+//                } else if (rbtn2.isSelected()) {
+//                    pizza = "Schinken";
+//                } else if (rbtn3.isSelected())
+//                {
+//                    pizza = "Salami + Schinken";
+//                } else if (rbtn4.isSelected()) {
+//                    pizza = "Margherita";
+//                } else if (rbtn5.isSelected()) {
+//                    pizza = "Diavolo Salami";
+//                } else if (rbtn6.isSelected()) {
+//                    pizza = "Special";
+//                } else {
+//                    JOptionPane.showMessageDialog(frame, "Bitte wählen Sie eine Pizza aus.");
+//                    return;
+//                }
+//                openOptionsWindow(username);
+//            }
+//        });
+//        panel.add(btn);
+//        frame.add(panel);
+//        frame.pack();
+//        frame.setSize(400,400);
+
     }
+
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                new OrderGUI();
+//            }
+//        });
+//    	System.out.println("Hallo");
+//    }
 }
