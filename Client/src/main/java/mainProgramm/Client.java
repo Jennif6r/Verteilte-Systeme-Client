@@ -68,7 +68,6 @@ public class Client {
 	public void addOrderItem(Order order, String orderId) {
 		AddOrderItemClient add = new AddOrderItemClient();
 		try {
-			
 			add.addOrderItem(orderId, JsonParser.parseOrder(order));
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -93,10 +92,10 @@ public class Client {
 		return null;
 	}
 	
-	public void getNumberOfOrders() {
+	private void getNumberOfOrders(String orderId) {
 		GetNumberOfOrderClient getNumber = new GetNumberOfOrderClient();
 		try {
-			int number = getNumber.getNumberOfOrdersFromOrderList("1680778200745");
+			int number = getNumber.getNumberOfOrdersFromOrderList(orderId);
 			System.out.println("number of orders : " + number);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,9 +107,10 @@ public class Client {
 		this.id = RegistratorClient.register(); 
 	}
 	
-	public List<OrderList> getActiveOrders() throws Exception {
+	public List<String> getActiveOrders() throws Exception {
 		RequestAktivOrderClient request = new RequestAktivOrderClient();
-		List<OrderList> activOrders = new ArrayList<OrderList>(Arrays.asList(request.checkForAktivOrder()));
+		List<String> activOrders = new ArrayList<String>(Arrays.asList(request.checkForAktivOrder()));
+		
 		return activOrders;
 	}
 
