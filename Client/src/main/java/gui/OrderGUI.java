@@ -6,6 +6,7 @@ import javax.swing.text.NumberFormatter;
 import mainProgramm.Client;
 import models.Order;
 import models.Product;
+import services.impl.StartOrderClient;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -54,21 +55,29 @@ public class OrderGUI {
         frame.getContentPane().removeAll();
         frame.repaint();
         panel = new JPanel(new GridLayout(3, 1));
+        
         JButton btn1 = new JButton("Sammelbestellung anfangen");
+        JButton btn2 = new JButton("Eigene Bestellung");
         JButton btn3 = new JButton("Aktive Sammelbestellung beenden");
+        
         btn1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 openPizzaSelectionWindow(username, client.startOrder(username));
+                StartOrderClient startOrder = new StartOrderClient();
+                try {
+					startOrder.startOrder(username);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
             	btn3.setEnabled(true);
             }
         });
-        JButton btn2 = new JButton("Eigene Bestellung");
         btn2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	// aktive Bestellungen rausfinden
             	try {
 //					client.getActiveOrders();
-					showActiveOrders(client.getActiveOrders());
+					showActiveOrders(client.getActiveOrders(), username);
 //	                openPizzaSelectionWindow(username, false, null);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -76,13 +85,16 @@ public class OrderGUI {
 				}
             }
         });
-//        btn3.setEnabled(false);
+//      btn3.setEnabled(false);
         btn3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 //            	System.out.println(client.getMergedOrder(client.orderId));
             	System.out.println(client.getMergedOrder("1681335971089"));
 
                 JOptionPane.showMessageDialog(frame, "Die aktive Sammelbestellung wurde beendet.");
+                JOptionPane.showMessageDialog(frame, "Hier sind die Bestellungen:"
+                		+ "+");
+
             }
         });
         panel.add(btn1);
@@ -91,49 +103,55 @@ public class OrderGUI {
         frame.add(panel);
         frame.pack();
         frame.setSize(400,400);
-
     }
     
-	private void showActiveOrders(Map<String, String> activeOrders) {
-    	//neues fenster menü mit klappmenü
-    	//ins menü: die keys (username), über
+	private void showActiveOrders(Map<String, String> activeOrders, String username) throws Exception {
         frame.getContentPane().removeAll();
         frame.repaint();
         Panel panel = new Panel();
 //    	String[] options = (String[]) activeOrders.keySet().toArray();
+        Map<String, String> activeOrdersDropdown = new HashMap<>();
+        activeOrdersDropdown = this.client.getActiveOrders();
+        System.out.println("in der map get(0): "+activeOrdersDropdown.get(0));
+        
+        
         String[] options = {"Option 1", "Option 2", "Option 3", "Option 4"};
         JComboBox<String> comboBox = new JComboBox<>(options);
         comboBox.setSelectedIndex(0); // Optional: Setzen der ausgewählten Option
         panel.add(comboBox);
-        // Hinzufügen des JComboBox zu JFrame
        
-        
-        // Einstellen der Größe des JFrame und Anzeigen
         frame.setSize(300, 150);
-        
-        
 
         JButton btn1 = new JButton("Absenden");
         btn1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	String username = (String)comboBox.getSelectedItem();
             	openPizzaSelectionWindow(username, activeOrders.get(username));
-            	
-            	
             }
         });
         
+        JButton btn2 = new JButton("Hauptmenue");
+        btn2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	openOptionsWindow(username);
+            }
+        });
+        
+        
         panel.add(btn1);
+        panel.add(btn2);
         frame.add(panel);
         frame.setVisible(true);
 
     }
 
     private void openPizzaSelectionWindow(String username, String orderId) {
-    	String[] pizzen = new String[]{"Salami","Schinken","jenny","rouven","Hallo","Mager"};
-    	panel = new JPanel(new GridLayout(1,3));
     	frame.getContentPane().removeAll();
         frame.repaint();
+    	panel = new JPanel(new GridLayout(1,3));
+
+    	String[] pizzen = new String[]{"Salami","Schinken","jenny","rouven","Hallo","Mager"};
+
         JPanel pizzaPanel = new JPanel(new GridLayout(pizzen.length+1, 1));
         for(int i = 0; i < pizzen.length; i++) {
         	pizzaPanel.add(new JLabel(pizzen[i]));
@@ -170,6 +188,10 @@ public class OrderGUI {
 				}
 				order.addProduct(productList);
 				client.addOrderItem(order, orderId);
+				JOptionPane orderSentInfo = new JOptionPane();
+				orderSentInfo.showMessageDialog(frame, "Bestellung wurde an den Host gesendet.");
+                openOptionsWindow(username);
+
 				
 			}
 		});
@@ -183,10 +205,9 @@ public class OrderGUI {
         formatter.setMinimum(0);
         formatter.setMaximum(Integer.MAX_VALUE);
         formatter.setAllowsInvalid(false);
-        // If you want the value to be committed on each keystroke instead of focus lost
         
         formatter.setCommitsOnValidEdit(true);
-//        JFormattedTextField[] formattedTFields = new JFormattedTextField[pizzen.length];
+//      JFormattedTextField[] formattedTFields = new JFormattedTextField[pizzen.length];
         for(int i = 0; i < pizzen.length; i++) {
         	JFormattedTextField formattedField = new JFormattedTextField(formatter);
         	formattedTFields[i] = formattedField;
@@ -194,11 +215,7 @@ public class OrderGUI {
         }
         
         panel.add(mengePanel);
-        
-        
-        
-        frame.add(panel);
-        
+        frame.add(panel);        
         frame.setVisible(true);
         
         
