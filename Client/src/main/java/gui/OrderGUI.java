@@ -27,7 +27,17 @@ public class OrderGUI {
     public OrderGUI(Client client) {
     	this.client = client;
         frame = new JFrame("Pizza Bestellung");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+        	@Override
+        	public void windowClosing(WindowEvent e) {
+        		try {
+					client.logout();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+        		System.exit(0);
+        	}
+		});
         panel = new JPanel(new BorderLayout());
         label = new JLabel("Benutzername: ");
         textField = new JTextField(20);
@@ -35,6 +45,7 @@ public class OrderGUI {
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String username = textField.getText();
+                client.setUsername(username);
                 try {
 					client.register();
 				} catch (Exception e1) {
@@ -63,12 +74,12 @@ public class OrderGUI {
         btn1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 openPizzaSelectionWindow(username, client.startOrder(username));
-                StartOrderClient startOrder = new StartOrderClient();
-                try {
-					startOrder.startOrder(username);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
+//                StartOrderClient startOrder = new StartOrderClient();
+//                try {
+//					startOrder.startOrder(username);
+//				} catch (Exception e1) {
+//					e1.printStackTrace();
+//				}
             	btn3.setEnabled(true);
             }
         });

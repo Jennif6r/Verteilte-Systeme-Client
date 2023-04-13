@@ -14,6 +14,7 @@ import models.Product;
 import services.impl.AddOrderItemClient;
 import services.impl.GetNumberOfOrderClient;
 import services.impl.JsonParser;
+import services.impl.LogoutClient;
 import services.impl.MergeOrderClient;
 import services.impl.RegistratorClient;
 import services.impl.RequestAktivOrderClient;
@@ -22,6 +23,15 @@ import services.impl.StartOrderClient;
 public class Client {
 	private String id;
 	public String orderId;
+	private String username; 
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
 	public static void main(String[] args) {
 		
@@ -117,6 +127,14 @@ public class Client {
 			orderIds.put(activOrders[i][0], activOrders[i][1]);
 		}
 		return orderIds;
+	}
+
+	public void logout() throws Exception {
+		LogoutClient logout = new LogoutClient();
+		if(this.id != null && this.username != null) {
+			logout.logoutClient(this.id, username);
+		}
+		
 	}
 
 }
