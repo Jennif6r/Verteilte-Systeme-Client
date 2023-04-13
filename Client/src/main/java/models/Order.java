@@ -4,11 +4,9 @@ import java.util.ArrayList;
 
 public class Order {
 	
-	
 	private ArrayList<Product> products=new ArrayList<Product>();;
 	
 	public Order() {
-//		this.products = 
 		
 	}
 	

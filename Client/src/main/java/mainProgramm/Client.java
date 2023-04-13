@@ -2,17 +2,16 @@ package mainProgramm;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import gui.OrderGUI;
 import models.Order;
-import models.OrderList;
 import models.Product;
 import services.impl.AddOrderItemClient;
 import services.impl.GetNumberOfOrderClient;
+import services.impl.GetPizzenClient;
 import services.impl.JsonParser;
 import services.impl.LogoutClient;
 import services.impl.MergeOrderClient;
@@ -35,33 +34,8 @@ public class Client {
 
 	public static void main(String[] args) {
 		
-//			
 		Client client = new Client();
-//		
-		OrderGUI orderGUI = new OrderGUI(client);
-//		
-//		
-//		try {
-////			client.id = RegistratorClient.register();
-////			System.out.println(client.id);
-////			// request for aktiv order
-//			RequestAktivOrderClient request = new RequestAktivOrderClient();
-////			client.startOrder();
-//			List<OrderList> activOrders = new ArrayList<OrderList>(Arrays.asList(request.checkForAktivOrder()));
-//			int length = activOrders.size();
-//			if( length > 0 ) {
-//				System.out.println(activOrders.toString());
-//			}
-////			client.addOrderItem();
-////			client.getNumberOfOrders();
-////			while (!request.checkForAktivOrder()) {
-////				// wait and do nothing
-////			}
-//			// here code to show frame to order
-////			client.getMergedOrder();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		new OrderGUI(client);
 	}
 	
 	public String startOrder(String user) {
@@ -73,7 +47,6 @@ public class Client {
 			e.printStackTrace();
 		}
 		this.orderId = orderId;
-//		System.out.println("id: "+ orderId);
 		return orderId;
 	}
 	
@@ -86,33 +59,24 @@ public class Client {
 		}
 	}
 
-	public ArrayList<Product> getProducts() {
-		ArrayList<Product> products = new ArrayList<Product>();
-		products.add(new Product("Magertia", 7.99, 2));
-		products.add(new Product("Salami", 9.55, 3));
-		return products;
-	}
-	
 	public String getMergedOrder(String orderId) {
 		MergeOrderClient merge = new MergeOrderClient();
 		try {
-			String result = merge.getMergedOrder(orderId);
-			return result;
+			return merge.getMergedOrder(orderId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	private void getNumberOfOrders(String orderId) {
+	private int getNumberOfOrders(String orderId) {
 		GetNumberOfOrderClient getNumber = new GetNumberOfOrderClient();
 		try {
-			int number = getNumber.getNumberOfOrdersFromOrderList(orderId);
-			System.out.println("number of orders : " + number);
+			return getNumber.getNumberOfOrdersFromOrderList(orderId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		return 0;
 	}
 	
 	public void register () throws Exception {
@@ -120,8 +84,7 @@ public class Client {
 	}
 	
 	public Map<String, String> getActiveOrders() throws Exception {
-		RequestAktivOrderClient request = new RequestAktivOrderClient();
-		String [][] activOrders = request.checkForAktivOrder();
+		String [][] activOrders = new RequestAktivOrderClient().checkForAktivOrder();
 		Map<String, String> orderIds = new HashMap<String, String>();
 		for (int i=0; i<activOrders.length; i++) {
 			orderIds.put(activOrders[i][0], activOrders[i][1]);
@@ -134,7 +97,15 @@ public class Client {
 		if(this.id != null && this.username != null) {
 			logout.logoutClient(this.id, username);
 		}
-		
 	}
 
+	public List<Product> getPizzen(){
+		String pizzenStr = "";
+		try {
+			pizzenStr = new GetPizzenClient().getPizzen();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return JsonParser.parseToMap(pizzenStr);
+	}
 }

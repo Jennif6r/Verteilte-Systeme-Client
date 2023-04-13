@@ -6,8 +6,7 @@ import jakarta.jws.soap.SOAPBinding;
 
 @WebService
 @SOAPBinding(style = SOAPBinding.Style.RPC)
-public interface RequestAktivOrder {
-	
+public interface GetPizzen {
 	@WebMethod
-	String[][] isThereAnAktivOrder();
+	String getPizzen();
 }
