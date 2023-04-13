@@ -80,7 +80,6 @@ public class OrderGUI {
 					showActiveOrders(client.getActiveOrders(), username);
 //	                openPizzaSelectionWindow(username, false, null);
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
             }
@@ -89,11 +88,10 @@ public class OrderGUI {
         btn3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 //            	System.out.println(client.getMergedOrder(client.orderId));
-            	System.out.println(client.getMergedOrder("1681335971089"));
 
                 JOptionPane.showMessageDialog(frame, "Die aktive Sammelbestellung wurde beendet.");
                 JOptionPane.showMessageDialog(frame, "Hier sind die Bestellungen:"
-                		+ "+");
+                		+ client.getMergedOrder(client.getMergedOrder("1681393814815")));
 
             }
         });
@@ -106,27 +104,29 @@ public class OrderGUI {
     }
     
 	private void showActiveOrders(Map<String, String> activeOrders, String username) throws Exception {
-        frame.getContentPane().removeAll();
+//      String[] options = {"Option 1", "Option 2", "Option 3", "Option 4"};
+
+		frame.getContentPane().removeAll();
         frame.repaint();
         Panel panel = new Panel();
-//    	String[] options = (String[]) activeOrders.keySet().toArray();
+        
+    	String[] options = activeOrders.keySet().toArray(new String[0]);
         Map<String, String> activeOrdersDropdown = new HashMap<>();
         activeOrdersDropdown = this.client.getActiveOrders();
-        System.out.println("in der map get(0): "+activeOrdersDropdown.get(0));
+        System.out.println("im options-array: " + options.toString());
         
         
-        String[] options = {"Option 1", "Option 2", "Option 3", "Option 4"};
         JComboBox<String> comboBox = new JComboBox<>(options);
-        comboBox.setSelectedIndex(0); // Optional: Setzen der ausgewählten Option
+//        comboBox.setSelectedIndex(0); // Optional: Setzen der ausgewählten Option
         panel.add(comboBox);
        
-        frame.setSize(300, 150);
+        frame.setSize(400,400);
 
         JButton btn1 = new JButton("Absenden");
         btn1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	String username = (String)comboBox.getSelectedItem();
-            	openPizzaSelectionWindow(username, activeOrders.get(username));
+            	String selectedUser = (String)comboBox.getSelectedItem();
+            	openPizzaSelectionWindow(username, activeOrders.get(selectedUser));
             }
         });
         
@@ -136,12 +136,11 @@ public class OrderGUI {
             	openOptionsWindow(username);
             }
         });
-        
-        
         panel.add(btn1);
         panel.add(btn2);
         frame.add(panel);
         frame.setVisible(true);
+        frame.setSize(400,400);
 
     }
 
@@ -180,10 +179,7 @@ public class OrderGUI {
 						if(number > 0) {
 							productList.add(new Product(pizzen[i], 5.5, number));
 						}
-						
 					}
-					
-					
 					System.out.println(formattedTFields[i].getValue());
 				}
 				order.addProduct(productList);
@@ -191,10 +187,17 @@ public class OrderGUI {
 				JOptionPane orderSentInfo = new JOptionPane();
 				orderSentInfo.showMessageDialog(frame, "Bestellung wurde an den Host gesendet.");
                 openOptionsWindow(username);
-
-				
 			}
 		});
+        
+        JButton btnGoToMenu = new JButton("Hauptmenue");
+        btnGoToMenu.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				openOptionsWindow(username);
+			}
+		});
+        
         pricePanel.add(btnPizzaSend);
         panel.add(pricePanel);
         
@@ -213,10 +216,12 @@ public class OrderGUI {
         	formattedTFields[i] = formattedField;
         	mengePanel.add(formattedField);
         }
-        
+        mengePanel.add(btnGoToMenu);
         panel.add(mengePanel);
         frame.add(panel);        
         frame.setVisible(true);
+        frame.setSize(400,400);
+
         
         
         
