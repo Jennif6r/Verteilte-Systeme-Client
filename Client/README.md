@@ -6,7 +6,7 @@ Ein Server kann mit mehreren Clients interagieren.
 # Installation / Einrichtung
 1. Repository klonen mit `git clone https://github.com/Jennif6r/Verteilte-Systeme-Client` 
 2. Zum Starten des Clients gibt es zwei Möglichkeiten
-  * Die Klasse Client.java in einer IDE nach Wahl starten
+  * Die Klasse Client.java starten
   * mithilfe von Maven eine JAR-Datei erzeugen und diese ausführen
   
 ## Beschreibung der Aufgabenstellung des Projekts
